@@ -3,9 +3,7 @@
 #include <stack>
 #include <bits/stdc++.h>
 #include <cmath>
-#include <stdlib.h>
 #include <vector>
-#include<array>
 
 using namespace std;
 int obtener_prioridad(string operador);
@@ -17,39 +15,51 @@ int main(){
     //string expresion="2*(1+(4*(2+1)+3))";
     //string expresion="3*(1+3^4)";
     //string expresion="(2*x^3)+25";
-    //string expresion="25+(2*3^3)";
-    string concatenado="";
-    int iterador=0;
-    vector <string> expresion_convertida;
+    string expresion="2 5 + ( 2*3^3) asdasd asd asd ";
+    //string expresion;
+    //cin>>expresion;
 
-    string expresion;
-    cin>>expresion;
+    //limpia espacios en blanco
+    expresion.erase(std::remove_if(expresion.begin(), expresion.end(), ::isspace), expresion.end());
+    //cadena auxiliar
+    string concatenado="";
+    //vector de tipo string que contendrá los caracteres de la cadena de entrada
+    vector <string> expresion_convertida,expresion_prefija;
+
+
+    //convierte la cadena a un vector de cadenas
     for(int i=0;i<expresion.size();i++){
-        iterador=i;
         concatenado="";
-        int prioridad1= obtener_prioridad(string(1,expresion[iterador]));
-        int prioridad2= obtener_prioridad(string(1,expresion[iterador+1]));
+        int prioridad1= obtener_prioridad(string(1,expresion[i]));
+        int prioridad2= obtener_prioridad(string(1,expresion[i+1]));
+        //verifica si el caracter evaluado y el que le continua en la cadena, son operadores matematicos o parentesis
         if(prioridad1==0&&prioridad2==0){
-            concatenado=concatenado+string(1,expresion[i]);
-            while(isdigit(expresion[i+1])==true||expresion[i+1]=='.'){
-                concatenado=concatenado+string(1,expresion[i+1]);
-                i++;
+            //si la prioridad es 0 solo se toman en cuenta digitos numericos y el punto decimal
+            if(isdigit(expresion[i+1])||expresion[i+1]=='.'){
+                concatenado=concatenado+string(1,expresion[i]);
+                while(isdigit(expresion[i+1])||expresion[i+1]=='.'){
+                    concatenado=concatenado+string(1,expresion[i+1]);
+                    //itera al siguiente caracter de la cadena ingresada
+                    i++;
+                }
             }
+            //se agrega al vector los numeros concatenados
             expresion_convertida.push_back(concatenado);
         }else{
+            //se agrega al vector los operadores o parentesis ingresados
             expresion_convertida.push_back(string(1,expresion[i]));
         }
     }
-    vector <string> expresion_prefija;
     expresion_prefija=(convertirA_Polaca(expresion_convertida));
     for(int i=0;i<expresion_prefija.size();i++){
         cout<<expresion_prefija[i];
     }
     float resultado = evaluar_expresion(expresion_prefija);
-    cout<<"\nResultado:"<<resultado;
+    cout<<"\nResultado: "<<resultado;
 }
 int obtener_prioridad(string operador){
     char caracter;
+    // convierte el string ingresado en un caracter, para poder evaluarlo en el switch
      if(operador.size()>1){
          caracter=operador[operador.size()-1];
     }else{
@@ -71,8 +81,7 @@ vector <string>convertirA_Polaca(vector <string> exp){ //notacion polaca es nota
     vector <string> exp_convertido;
     //invirtiendo la expresion infija
     reverse(exp.begin(), exp.end());
-    //recorriendo los caracteres del string
-    int prioridad=0;
+    //recorriendo los strings almacenados en el vector
     for(int i=0;i<exp.size();i++){
         //si el caracter no es operador matematico
         if(obtener_prioridad(exp[i])<=1){
@@ -83,7 +92,6 @@ vector <string>convertirA_Polaca(vector <string> exp){ //notacion polaca es nota
             else if(exp[i]=="("){
                 //mientras que la pila no este vacia o no encuentre un parantesis cerrado
                 while(!pila_operadores.empty()&&obtener_prioridad(pila_operadores.top())!=1){
-                        //exp_convertido=exp_convertido+pila_operadores.top();
                         exp_convertido.push_back(pila_operadores.top());
                         pila_operadores.pop();
                 }
@@ -91,15 +99,15 @@ vector <string>convertirA_Polaca(vector <string> exp){ //notacion polaca es nota
             }
             //si el caracter es un numero concatena a la cadena salida
             else if(obtener_prioridad(exp[i])==0){
-                //exp_convertido=exp_convertido+exp[i];
                 exp_convertido.push_back(exp[i]);
             }
         }
         else{
             if(!pila_operadores.empty()){
+                //si la prioridad del caracter o string es menor o igual que el de la pila
                 if(obtener_prioridad(exp[i])<=obtener_prioridad(pila_operadores.top())){
+                    //desapila hasta que la prioridad del elemento sea menor o igual que el caracter o string del vector
                     while(!pila_operadores.empty()&&obtener_prioridad(exp[i])<obtener_prioridad(pila_operadores.top())){
-                        //exp_convertido=exp_convertido+pila_operadores.top();
                         exp_convertido.push_back(pila_operadores.top());
                         pila_operadores.pop();
                     }
@@ -108,8 +116,8 @@ vector <string>convertirA_Polaca(vector <string> exp){ //notacion polaca es nota
             pila_operadores.push(exp[i]);
         }
     }
+    //desapila los elementos que faltan
     while(!pila_operadores.empty()){
-        //exp_convertido=exp_convertido+pila_operadores.top();
         exp_convertido.push_back(pila_operadores.top());
         pila_operadores.pop();
     }
