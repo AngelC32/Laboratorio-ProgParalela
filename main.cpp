@@ -33,7 +33,7 @@ int main()
     cin >> function;
     */
 
-    function = "(2*x^3)+25";
+    function = "((21*2^3)-10)*2";
     
     string respuestaConv = convPolaca(function);
     cout<<"Notación polaca de la función: "<< respuestaConv << endl;
@@ -169,3 +169,6 @@ double operacion(char letra, double num1, double num2){
         default: return 0;
     }
 }
+
+// create a new function
+
