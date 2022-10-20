@@ -1,12 +1,17 @@
 #include <iostream>
 #include <stack>
+#include <string.h>
 #include <cmath>
+
 
 using namespace std;
 
 // Prototipos de declaración de funciones
 double eval(string notPolaca, double x);
 string convPolaca(string function);
+bool esOperador(char letra);
+int prioridadEnPila(char operador);
+int prioridadEnExpresion(char operador);
 
 // Main function
 int main()
@@ -14,6 +19,7 @@ int main()
     int a, b, err;
     string function;
 
+    /*
     cout << "Ingrese el límite inferior del intervalo: " << endl;
     cin >> a;
 
@@ -22,9 +28,13 @@ int main()
 
     cout << "Ingrese el error absoluto admisible: " << endl;
     cin >> err;
-
+    
     cout << "Ingrese la función a evaluar: " << endl;
     cin >> function;
+    */
+
+    function = "2+3*4";
+    cout<<"Notacion polaca de la funcion: " << convPolaca(function)<<endl;
 
     return 0;
 }
@@ -83,10 +93,41 @@ string convPolaca(string function){
             pila.push(letra);
         }else{
             if(letra == '('){
-                while()
+                while(!strcmp(pila.top(), ")")){
+                    expression += pila.top();
+                    pila.pop();
+                }
+                pila.pop();
+            }else{
+                if(!esOperador(letra)){
+                    expression += letra;
+                }else{
+                    while(
+                        !pila.empty() && 
+                        (
+                            prioridadEnExpresion(letra) < prioridadEnPila(pila.top()))
+                        ){
+                        expression += pila.top();
+                        pila.pop();
+                    }
+                    pila.push(letra);
+                }
             }
         }
     }
+
+    while(!pila.empty()){
+        expression += pila.top();
+        pila.pop();
+    }
+
+
+    // return expression inverse
+    string expressionInverse = "";
+    for(int i = expression.length() - 1; i >= 0; i--){
+        expressionInverse += expression[i];
+    }
+    return expressionInverse;
 }
 
 bool esOperador(char letra){
