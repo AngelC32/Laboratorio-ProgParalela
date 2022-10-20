@@ -1,27 +1,33 @@
+// Algoritmo valido para funciones con coeficientes
+// y constantes no mayores de 1 cifra
+
 #include <iostream>
 #include <string>
 #include <stack>
+#include <cmath>
 
 using namespace std;
 
 int getPriority(char c);
 bool isOperator(char c);
 string to_polac(string inf_exp);
-double do_op();
+double do_op(char op, double a, double b);
+double operate_exp(string exp, int x);
 
 int main() {
+	string str_inf_exp = "(3*X^2+2*x)r2";
+	string str_polac_exp;
+    double res;
+    int x = 5;
+    // cin >> str_inf_exp;
 
-	string str_inf_exp = "(A+B)*(C+D)";
-	// cin >> str_inf_exp;
+    str_polac_exp = to_polac(str_inf_exp);
+    cout << str_polac_exp <<endl;
 
-	cout << to_polac(str_inf_exp);
+    res = operate_exp(str_polac_exp, x);
+    cout << res;
 
-	
 	return 0;
-}
-
-double do_op() {
-
 }
 
 int getPriority(char c) {
@@ -125,4 +131,52 @@ string to_polac(string inf_exp) {
  
 	//devuelve todo el bloque armado
     return stack_op.top();
+}
+
+double do_op(char op, double a, double b) {
+    switch (op) {
+        case '+': return a + b; break;
+        case '-': return a - b; break;
+        case '*': return a * b; break;
+        case '/': return a / b; break;
+        case '^': return pow(a, b); break;
+        case 'r': return pow(a, 1.0 / b); break;
+        case 'l': return log(a) / log(b);
+    }
+}
+
+double operate_exp(string exp, int x) {
+    double op1, op2, res;
+    stack<double> out_stack;
+    char c;
+    
+    // Reemplazar variable
+    for (int i=0; i < exp.length(); i++) {
+        c = exp[i];
+
+        if(c == 'x' || c == 'X') {
+            exp[i] = (char) (x + 48);
+        }
+    }
+    cout << exp<<endl;
+
+    //Evaluar
+    for (int i=exp.length()-1; i >= 0; i--) {
+        c = exp[i];
+
+        if(isOperator(c)) {
+            op1 = out_stack.top();
+            out_stack.pop();
+            op2 = out_stack.top();
+            out_stack.pop();
+
+            res = do_op(c, op1, op2);
+            out_stack.push(res);
+
+        } else {
+            out_stack.push(((double) c)- 48);
+        }
+    }
+
+    return out_stack.top();
 }
