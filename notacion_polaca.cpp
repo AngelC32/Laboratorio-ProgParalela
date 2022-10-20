@@ -15,17 +15,14 @@ int main(){
     //string expresion="2*(1+(4*(2+1)+3))";
     //string expresion="3*(1+3^4)";
     //string expresion="(2*x^3)+25";
-    string expresion="2 5 + ( 2*3^3) asdasd asd asd ";
-    //string expresion;
-    //cin>>expresion;
+    //string expresion="25+(2*3^3)";
+    string expresion="";
+    cin>>expresion;
 
-    //limpia espacios en blanco
-    expresion.erase(std::remove_if(expresion.begin(), expresion.end(), ::isspace), expresion.end());
     //cadena auxiliar
     string concatenado="";
     //vector de tipo string que contendrá los caracteres de la cadena de entrada
     vector <string> expresion_convertida,expresion_prefija;
-
 
     //convierte la cadena a un vector de cadenas
     for(int i=0;i<expresion.size();i++){
@@ -50,6 +47,7 @@ int main(){
             expresion_convertida.push_back(string(1,expresion[i]));
         }
     }
+
     expresion_prefija=(convertirA_Polaca(expresion_convertida));
     for(int i=0;i<expresion_prefija.size();i++){
         cout<<expresion_prefija[i];
