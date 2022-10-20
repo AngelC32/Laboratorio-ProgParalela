@@ -31,7 +31,7 @@ int main(){
         int prioridad2= obtener_prioridad(string(1,expresion[iterador+1]));
         if(prioridad1==0&&prioridad2==0){
             concatenado=concatenado+string(1,expresion[i]);
-            while(isdigit(expresion[i+1])==true){
+            while(isdigit(expresion[i+1])==true||expresion[i+1]=='.'){
                 concatenado=concatenado+string(1,expresion[i+1]);
                 i++;
             }
