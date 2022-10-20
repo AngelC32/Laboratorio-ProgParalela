@@ -3,15 +3,15 @@
 #include <string.h>
 #include <cmath>
 
-
 using namespace std;
 
 // Prototipos de declaración de funciones
-double eval(string notPolaca, double x);
-string convPolaca(string function);
+double evalPolaca(string notPolaca);
+double operacion(char letra, double num1, double num2);
 bool esOperador(char letra);
 int prioridadEnPila(char operador);
 int prioridadEnExpresion(char operador);
+string convPolaca(string function);
 
 // Main function
 int main()
@@ -33,51 +33,34 @@ int main()
     cin >> function;
     */
 
-    function = "2+3*4";
-    cout<<"Notacion polaca de la funcion: " << convPolaca(function)<<endl;
+    function = "(2*x^3)+25";
+    
+    string respuestaConv = convPolaca(function);
+    cout<<"Notación polaca de la función: "<< respuestaConv << endl;
+    double respuestaEval = evalPolaca(respuestaConv);
+    cout<<"Evaluación de la notación polaca: " << respuestaEval <<endl;
 
     return 0;
 }
 
 // Evaluar notación polaca
-double eval(string notPolaca, double x)
-{
-    double result;
-    int i = 0;
+double evalPolaca(string expPol){
+    stack<char> pila;
+    for(int i=expPol.length()-1; i>=0; i--){
+        char letra = expPol[i];
 
-    // Recorrer hasta que termine la cadena
-    while (notPolaca[i] != '\0')
-    {
-        // Evaluar el caracter
-        switch(notPolaca[i]){
-            case '+':
-                result = result + notPolaca[i+1];
-                break;
-            case '-':
-                result = result - notPolaca[i+1];
-                break;
-            case '*':
-                result = result * notPolaca[i+1];
-                break;
-            case '/':
-                result = result / notPolaca[i+1];
-                break;
-            case '^':
-                result = pow(result, notPolaca[i+1]);
-                break;
-            case 'r':
-                result = sqrt(result);
-                break;
-            case 'l':
-                result = log(result);
-                break;
-            default:
-                result = notPolaca[i];
-                break;
+        if(!esOperador(letra)){
+            pila.push((double)letra - 48);
+        }else{
+            double num1 = (double)pila.top();
+            pila.pop();
+            double num2 = (double)pila.top();
+            pila.pop();
+            double num3 = operacion(letra, num1, num2);
+            pila.push(num3);
         }
-        i++;
     }
-    return result;
+    return (double)pila.top();
 } 
 
 
@@ -88,12 +71,15 @@ string convPolaca(string function){
     
     while(!function.empty()){
         char letra = function[function.length() - 1];
+        
+        //Recortar la expresion
+        function = function.substr(0, function.size() - 1);
 
         if(letra == ')'){
             pila.push(letra);
         }else{
             if(letra == '('){
-                while(!strcmp(pila.top(), ")")){
+                while( pila.top() != ')'){
                     expression += pila.top();
                     pila.pop();
                 }
@@ -130,6 +116,8 @@ string convPolaca(string function){
     return expressionInverse;
 }
 
+
+// Funciones auxiliares
 bool esOperador(char letra){
     return letra == '+' 
     || letra == '-' 
@@ -169,3 +157,15 @@ int prioridadEnExpresion(char operador){
     }
 }
 
+double operacion(char letra, double num1, double num2){
+    switch(letra){
+        case '*': return num1*num2;
+        case '/': return num1/num2;
+        case '+': return num1+num2;
+        case '-': return num1-num2;
+        case '^': return pow(num1,num2);
+        // case 'r': return sqrt(num1*num2);
+        // case 'l': return num1*num2;
+        default: return 0;
+    }
+}
