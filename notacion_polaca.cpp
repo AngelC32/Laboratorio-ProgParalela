@@ -9,20 +9,16 @@ using namespace std;
 int obtener_prioridad(string operador);
 vector <string> convertirA_Polaca(vector <string> exp_infija);
 float evaluar_expresion(vector <string> exp);
+float funcion(float x, vector<string> fx,int pos);
 
 int main(){
 
-    string expresion="",concatenado="",x;
+    string expresion="",concatenado="";
+    float x ;
     cout<<"f(x)=";
-    //expresion="4+4^2";
-    // expresion="2*(1+(4*(2+1)+3))";
-    //expresion="3*(1+3^4)";
-    // expresion="(2*x^3)+25";
-    // expresion="25+(2*3^3)";s
     cin>>expresion;
     cout<<"x=";
     cin>>x;
-    expresion.replace(expresion.find("x"),1, x);
     //vector de tipo string que contendrá los caracteres de la cadena de entrada
     vector <string> expresion_convertida,expresion_prefija;
 
@@ -30,9 +26,8 @@ int main(){
     for(int i=0;i<expresion.size();i++){
         concatenado=string(1,expresion[i]);
         int prioridad1= obtener_prioridad(string(1,expresion[i]));
-        int prioridad2= obtener_prioridad(string(1,expresion[i+1]));
         //verifica si el caracter evaluado y el que le continua en la cadena, son operadores matematicos o parentesis
-        if(isdigit(expresion[i])||expresion[i]=='.'){
+        if(isdigit(expresion[i])||expresion[i]=='.'||prioridad1==0){
             //si la prioridad es 0 solo se toman en cuenta digitos numericos y el punto decimal
             while(isdigit(expresion[i+1])||expresion[i+1]=='.'){
                 concatenado=concatenado+string(1,expresion[i+1]);
@@ -46,13 +41,7 @@ int main(){
             expresion_convertida.push_back(concatenado);
         }
     }
-
-    expresion_prefija=(convertirA_Polaca(expresion_convertida));
-    for(int i=0;i<expresion_prefija.size();i++){
-        cout<<expresion_prefija[i];
-    }
-    float resultado = evaluar_expresion(expresion_prefija);
-    cout<<"\nResultado: "<<resultado;
+    cout<<"f("<<x<<")="<<funcion(x,expresion_convertida,pos);
 }
 int obtener_prioridad(string operador){
     char caracter;
@@ -178,5 +167,20 @@ float evaluar_expresion(vector <string> exp){
     }
     resultado= pila_operacion.top();
     pila_operacion.pop();
+    return resultado;
+}
+float funcion(float x, vector<string> fx){
+    string aux;
+    aux=to_string(x);
+    for(int i=0;i<fx.size();i++){
+        if(fx[i]=="x"){
+            fx[i]=aux;
+        }
+    }
+    fx=(convertirA_Polaca(fx));
+   /* for(int i=0;i<fx.size();i++){
+        cout<<fx[i];
+    }*/
+    float resultado = evaluar_expresion(fx);
     return resultado;
 }
