@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// Prototipos de declaración de funciones
+// Prototipos de funciones
 double evalPolaca(string notPolaca);
 double operacion(char letra, double num1, double num2);
 bool esOperador(char letra);
@@ -26,6 +26,7 @@ int main()
     cout << "Ingrese el límite superior del intervalo: " << endl;
     cin >> b;
 
+    # Calculo de la altura de cada trapecio = (b-a)/n, donde n es el número 
     cout << "Ingrese el error absoluto admisible: " << endl;
     cin >> err;
     
@@ -33,7 +34,7 @@ int main()
     cin >> function;
     */
 
-    function = "((21*2^3)-10)*2";
+    function = "((2*2^3x+1)-1)*2";
     
     string respuestaConv = convPolaca(function);
     cout<<"Notación polaca de la función: "<< respuestaConv << endl;
@@ -164,11 +165,34 @@ double operacion(char letra, double num1, double num2){
         case '+': return num1+num2;
         case '-': return num1-num2;
         case '^': return pow(num1,num2);
-        // case 'r': return sqrt(num1*num2);
-        // case 'l': return num1*num2;
+        case 'r': return pow(num1, 1/num2);
         default: return 0;
     }
 }
 
-// create a new function
 
+/*
+float calculoIntegral(int limSup, int limInf, double error){
+    float errorAbs = 0;
+    float sumAreas = 0;
+    // Division inicial
+    int n = 2;
+
+    // Estableciendo los valores para el cálculo
+    // limSup = 3
+    // limInf = 5
+
+    // Mientras el error sea mayor al permitido (input)
+    while(error >= 0.1){
+        // Calculo de la altura del trapecio
+        float alt = (limSup - limInf) / n;
+    
+        // Calcular el valor de la integral
+        double aux =  
+        sumAreas += 1;
+
+
+    }
+}
+
+*/
