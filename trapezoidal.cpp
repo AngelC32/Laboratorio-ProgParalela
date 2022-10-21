@@ -2,6 +2,7 @@
 #include <string>
 #include <stack>
 #include <cmath>
+#include <ctype.h>
 
 using namespace std;
 
@@ -12,7 +13,8 @@ double do_op(char op, double a, double b);
 double operate_exp(string exp, int x);
 
 int main() {
-	string str_inf_exp = "(10+2.35)*(20-X)";
+	string str_inf_exp = "(30.5*X^2+25*x)r2";
+	//string str_inf_exp = "(10+235)*(20-X)";
 	string str_polac_exp;
     double res;
     int x = 5;
@@ -22,8 +24,8 @@ int main() {
     cout << str_inf_exp <<endl;
     cout << str_polac_exp <<endl;
 
-    //res = operate_exp(str_polac_exp, x);
-    //cout << res;
+    res = operate_exp(str_polac_exp, x);
+    cout << res;
 
 	return 0;
 }
@@ -158,6 +160,7 @@ double do_op(char op, double a, double b) {
 double operate_exp(string exp, int x) {
     double op1, op2, res;
     stack<double> out_stack;
+	string num = "";
     char c;
     
     // Reemplazar variable
@@ -168,11 +171,12 @@ double operate_exp(string exp, int x) {
             exp[i] = (char) (x + 48);
         }
     }
-    cout << exp<<endl;
+    //cout << exp <<endl;
 
     //Evaluar
     for (int i=exp.length()-1; i >= 0; i--) {
         c = exp[i];
+		//cout << "___TESTING___c__"<< c <<endl;
 
         if(isOperator(c)) {
             op1 = out_stack.top();
@@ -183,8 +187,14 @@ double operate_exp(string exp, int x) {
             res = do_op(c, op1, op2);
             out_stack.push(res);
 
-        } else {
-            out_stack.push(((double) c)- 48);
+        } else if (isdigit(c)) {
+            while (exp[i] != ' ') {
+                //cout << "___TESTING___exp__"<< exp[i] <<endl;
+                num = string(1, exp[i]) + num;
+                i--;
+            }
+            out_stack.push(stod(num));       
+            num = "";
         }
     }
 
