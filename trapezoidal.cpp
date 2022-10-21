@@ -1,6 +1,3 @@
-// Algoritmo valido para funciones con coeficientes
-// y constantes no mayores de 1 cifra
-
 #include <iostream>
 #include <string>
 #include <stack>
@@ -15,17 +12,18 @@ double do_op(char op, double a, double b);
 double operate_exp(string exp, int x);
 
 int main() {
-	string str_inf_exp = "(3*X^2+2*x)r2";
+	string str_inf_exp = "(10+2.35)*(20-X)";
 	string str_polac_exp;
     double res;
     int x = 5;
     // cin >> str_inf_exp;
 
     str_polac_exp = to_polac(str_inf_exp);
+    cout << str_inf_exp <<endl;
     cout << str_polac_exp <<endl;
 
-    res = operate_exp(str_polac_exp, x);
-    cout << res;
+    //res = operate_exp(str_polac_exp, x);
+    //cout << res;
 
 	return 0;
 }
@@ -54,6 +52,7 @@ string to_polac(string inf_exp) {
 
     stack<char> stack_sign;
     stack<string> stack_op;
+	string num;
 
 	char c;
 	string op1, op2;
@@ -74,11 +73,12 @@ string to_polac(string inf_exp) {
                 stack_op.pop();
                 op2 = stack_op.top();
                 stack_op.pop();
-                char op = stack_sign.top();
+				
+                string op = string(1, stack_sign.top());
                 stack_sign.pop();
 
 				// lo añadimos a la pila de salida como un bloque
-                string tmp = op + op2 + op1;
+                string tmp = op + " " + op2 + op1;
                 stack_op.push(tmp);
             }
 
@@ -91,7 +91,16 @@ string to_polac(string inf_exp) {
 
         // Si no es operador lo agregamos al string de salida
         else if (!isOperator(c)) {
-            stack_op.push(string(1, c));
+            //Validar si existen numeros de mas de 1 cifra
+            while ( isdigit(inf_exp[i]) || inf_exp[i] == '.' || 
+                    inf_exp[i] == 'x' || inf_exp[i] == 'X') {
+
+                num += string(1, inf_exp[i]);
+                i++;
+            }
+            stack_op.push(num + " ");
+            i--;        //devolviendo la posicion anterior al operador encontrado
+            num = "";
         }
 
 		//Si es operador
@@ -104,10 +113,11 @@ string to_polac(string inf_exp) {
                 stack_op.pop();
                 op2 = stack_op.top();
                 stack_op.pop();
-                char op = stack_sign.top();
+				
+                string op = string(1, stack_sign.top());
                 stack_sign.pop();
 
-                string tmp = op + op2 + op1;
+                string tmp = op + " " + op2 + op1;
                 stack_op.push(tmp);
             }
 			// Pusheamos el operador guardado tras el ordenamiento
@@ -122,10 +132,10 @@ string to_polac(string inf_exp) {
         op2 = stack_op.top();
         stack_op.pop();
 
-        char op = stack_sign.top();
+        string op = string(1, stack_sign.top());
         stack_sign.pop();
 
-        string tmp = op + op2 + op1;
+        string tmp = op + " " + op2 + op1;
         stack_op.push(tmp);
     }
  
