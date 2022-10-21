@@ -9,39 +9,40 @@ using namespace std;
 int obtener_prioridad(string operador);
 vector <string> convertirA_Polaca(vector <string> exp_infija);
 float evaluar_expresion(vector <string> exp);
-float funcion(float x, vector<string> fx,int pos);
+float funcion(float x, vector<string> fx);
 
 int main(){
 
-    string expresion="",concatenado="";
-    float x ;
+    string ex_funcion="",concatenado="";
+    float x ,resultado;
     cout<<"f(x)=";
-    cin>>expresion;
+    cin>>ex_funcion;
     cout<<"x=";
     cin>>x;
     //vector de tipo string que contendrá los caracteres de la cadena de entrada
-    vector <string> expresion_convertida,expresion_prefija;
+    vector <string> expresion;
 
     //convierte la cadena a un vector de cadenas
-    for(int i=0;i<expresion.size();i++){
-        concatenado=string(1,expresion[i]);
-        int prioridad1= obtener_prioridad(string(1,expresion[i]));
+    for(int i=0;i<ex_funcion.size();i++){
+        concatenado=string(1,ex_funcion[i]);
+        int prioridad1= obtener_prioridad(string(1,ex_funcion[i]));
         //verifica si el caracter evaluado y el que le continua en la cadena, son operadores matematicos o parentesis
-        if(isdigit(expresion[i])||expresion[i]=='.'||prioridad1==0){
+        if(isdigit(ex_funcion[i])||ex_funcion[i]=='.'||prioridad1==0){
             //si la prioridad es 0 solo se toman en cuenta digitos numericos y el punto decimal
-            while(isdigit(expresion[i+1])||expresion[i+1]=='.'){
-                concatenado=concatenado+string(1,expresion[i+1]);
+            while(isdigit(ex_funcion[i+1])||ex_funcion[i+1]=='.'){
+                concatenado=concatenado+string(1,ex_funcion[i+1]);
                 //itera al siguiente caracter de la cadena ingresada
                 i++;
             }
             //se agrega al vector los numeros concatenados
-            expresion_convertida.push_back(concatenado);
+            expresion.push_back(concatenado);
         }else{
             //se agrega al vector los operadores o parentesis ingresados
-            expresion_convertida.push_back(concatenado);
+            expresion.push_back(concatenado);
         }
     }
-    cout<<"f("<<x<<")="<<funcion(x,expresion_convertida,pos);
+    resultado=funcion(x,expresion);
+    cout<<"f("<<x<<")="<<resultado;
 }
 int obtener_prioridad(string operador){
     char caracter;
