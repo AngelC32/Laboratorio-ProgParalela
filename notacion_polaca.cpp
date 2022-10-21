@@ -12,39 +12,38 @@ float evaluar_expresion(vector <string> exp);
 
 int main(){
 
-    //string expresion="2*(1+(4*(2+1)+3))";
-    //string expresion="3*(1+3^4)";
-    //string expresion="(2*x^3)+25";
-    //string expresion="25+(2*3^3)";
-    string expresion="";
+    string expresion="",concatenado="",x;
+    cout<<"f(x)=";
+    //expresion="4+4^2";
+    // expresion="2*(1+(4*(2+1)+3))";
+    //expresion="3*(1+3^4)";
+    // expresion="(2*x^3)+25";
+    // expresion="25+(2*3^3)";s
     cin>>expresion;
-
-    //cadena auxiliar
-    string concatenado="";
+    cout<<"x=";
+    cin>>x;
+    expresion.replace(expresion.find("x"),1, x);
     //vector de tipo string que contendrá los caracteres de la cadena de entrada
     vector <string> expresion_convertida,expresion_prefija;
 
     //convierte la cadena a un vector de cadenas
     for(int i=0;i<expresion.size();i++){
-        concatenado="";
+        concatenado=string(1,expresion[i]);
         int prioridad1= obtener_prioridad(string(1,expresion[i]));
         int prioridad2= obtener_prioridad(string(1,expresion[i+1]));
         //verifica si el caracter evaluado y el que le continua en la cadena, son operadores matematicos o parentesis
-        if(prioridad1==0&&prioridad2==0){
+        if(isdigit(expresion[i])||expresion[i]=='.'){
             //si la prioridad es 0 solo se toman en cuenta digitos numericos y el punto decimal
-            if(isdigit(expresion[i+1])||expresion[i+1]=='.'){
-                concatenado=concatenado+string(1,expresion[i]);
-                while(isdigit(expresion[i+1])||expresion[i+1]=='.'){
-                    concatenado=concatenado+string(1,expresion[i+1]);
-                    //itera al siguiente caracter de la cadena ingresada
-                    i++;
-                }
+            while(isdigit(expresion[i+1])||expresion[i+1]=='.'){
+                concatenado=concatenado+string(1,expresion[i+1]);
+                //itera al siguiente caracter de la cadena ingresada
+                i++;
             }
             //se agrega al vector los numeros concatenados
             expresion_convertida.push_back(concatenado);
         }else{
             //se agrega al vector los operadores o parentesis ingresados
-            expresion_convertida.push_back(string(1,expresion[i]));
+            expresion_convertida.push_back(concatenado);
         }
     }
 
@@ -58,11 +57,8 @@ int main(){
 int obtener_prioridad(string operador){
     char caracter;
     // convierte el string ingresado en un caracter, para poder evaluarlo en el switch
-     if(operador.size()>1){
-         caracter=operador[operador.size()-1];
-    }else{
-         caracter=operador[0];
-    }
+    // en el caso de numeros de más de una cifra se toma la primera
+    caracter=operador[0];
     switch(caracter){
         case '^': return 4;
         case '*':
