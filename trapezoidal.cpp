@@ -18,14 +18,71 @@ int main() {
 	string str_polac_exp;
     double res;
     int x = 5;
+	
     // cin >> str_inf_exp;
-
+	cout << str_inf_exp <<endl;
+	
     str_polac_exp = to_polac(str_inf_exp);
-    cout << str_inf_exp <<endl;
     cout << str_polac_exp <<endl;
 
-    res = operate_exp(str_polac_exp, x);
-    cout << res;
+    //res = operate_exp(str_polac_exp, x);
+    //cout << res;
+	
+	/*
+        Entradas:
+
+            a b         --> intervalo
+            err_abs     --> error absoluto admisible
+            str_func    --> funcion a integrar
+
+        Salidas:
+
+            val         --> valor de la integral
+            n           --> particiones necesarias (precision)
+    */
+
+	/*
+		3 5
+        0.001
+        (x+2)^2
+
+        26.6666
+        4
+    */
+	
+	// int a, b, n=2;
+    // double err, err_abs, dx, val;
+    // string func;
+
+    // while (err > err_abs) {
+    //     // code
+
+    //     break;
+    // }
+
+
+    /*
+
+    dx = (float) (b - a)/n;
+
+
+    // calculando los limites
+    for (int i = 0; i < n; i++) {
+        xi[i] = a + (i*dx);
+    }
+    
+    for (int i = 1; i < n-1; i++) {
+        sum += 2*f(xi[i]);
+    }
+
+    sum += dx/2 * (f(xi[0]) + f(xi[n-1]));
+
+
+    cout << a <<endl;
+    cout << b <<endl;
+    cout << err_abs <<endl;
+    cout << func <<endl;
+    */
 
 	return 0;
 }
@@ -155,6 +212,7 @@ double do_op(char op, double a, double b) {
         case 'r': return pow(a, 1.0 / b); break;
         case 'l': return log(a) / log(b);
     }
+	return 0;
 }
 
 double operate_exp(string exp, int x) {
