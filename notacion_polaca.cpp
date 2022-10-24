@@ -36,15 +36,15 @@ int main(){
         4
     */
 
-	int a=3, b=5, n=1;
-    float err=0.001, err_abs=0, dx, val,gn=0,gnmas1=0;
+	int a, b, n=1;
+    float err=0, err_abs=0, dx, val,gn=0,gnmas1=0;
     string ex_funcion="",concatenado="";
     ex_funcion="(x+2)^2";
     float x ,resultado;
-    //cout<<"f(x)=";
-    //cin>>ex_funcion;
-    //cout<<"x=";
-    //cin>>x;
+    cin>>a;
+    cin>>b;
+    cin>>ex_funcion;
+    cin>>err;
     //vector de tipo string que contendra los caracteres de la cadena de entrada
     vector <string> expresion;
     //convierte la cadena a un vector de cadenas
@@ -70,10 +70,6 @@ int main(){
     vector<float> xi1,xi2;
     xi1=calcularXi(b,a,n);
     gn=integral_g(xi1,expresion);
-    cout<<a<<endl;
-    cout<<b<<endl;
-    cout<<err<<endl;
-    cout<<ex_funcion<<endl;
     do{
         xi1=calcularXi(b,a,n);
         gn=integral_g(xi1,expresion);
