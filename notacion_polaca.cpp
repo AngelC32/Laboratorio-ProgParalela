@@ -66,26 +66,28 @@ int main(){
             expresion.push_back(concatenado);
         }
     }
-    //resultado=funcion(x,expresion);
-    //cout<<"f("<<x<<")="<<resultado;
+
+    vector<float> xi1,xi2;
+    xi1=calcularXi(b,a,n);
+    gn=integral_g(xi1,expresion);
+    cout<<"\n";
     cout<<a<<endl;
     cout<<b<<endl;
-    /*cout<<err<<endl;
-    cout<<ex_funcion<<endl;*/
     do{
-        vector<float> xi1=calcularXi(b,a,n);
+        xi1=calcularXi(b,a,n);
         //cout<<xi1[xi1.size()-1]<<"\n";
         gn=integral_g(xi1,expresion);
-        vector<float> xi2=calcularXi(b,a,n+1);
+        xi2=calcularXi(b,a,n+1);
         //cout<<xi2[xi2.size()-1]<<"\n";
         gnmas1=integral_g(xi2,expresion);
-        err_abs= abs(gnmas1-gn);
+        cout<<gnmas1;
         n++;
+        cout<<endl;
     }
     while (err < err_abs);
     n=n-1;
-    cout<<n<<endl;
     cout<<gn<<endl;
+    cout<<n<<endl;
     cout<<err_abs;
 }
 vector<float> calcularXi(float b,float a,int n){
@@ -102,10 +104,11 @@ vector<float> calcularXi(float b,float a,int n){
 }
 float integral_g( vector <float> xi, vector <string> fx){
     float sumatoria=0;
-    for(int i=0;i<xi.size();i++){
-        sumatoria+=(xi[i+1]-xi[i])*((funcion(xi[i+1],fx)-funcion(xi[i],fx))/2);
+    for(int i=0;i<xi.size()-1;i++){
+        sumatoria+=(xi[i+1]-xi[i])*((funcion(xi[i+1],fx)+funcion(xi[i],fx))/2);
     }
     return sumatoria;
+
 }
 
 int obtener_prioridad(string operador){
