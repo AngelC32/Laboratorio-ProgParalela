@@ -70,19 +70,15 @@ int main(){
     vector<float> xi1,xi2;
     xi1=calcularXi(b,a,n);
     gn=integral_g(xi1,expresion);
-    cout<<"\n";
     cout<<a<<endl;
     cout<<b<<endl;
     do{
         xi1=calcularXi(b,a,n);
-        //cout<<xi1[xi1.size()-1]<<"\n";
         gn=integral_g(xi1,expresion);
         xi2=calcularXi(b,a,n+1);
-        //cout<<xi2[xi2.size()-1]<<"\n";
         gnmas1=integral_g(xi2,expresion);
-        cout<<gnmas1;
+        err_abs= abs(gnmas1-gn);
         n++;
-        cout<<endl;
     }
     while (err < err_abs);
     n=n-1;
