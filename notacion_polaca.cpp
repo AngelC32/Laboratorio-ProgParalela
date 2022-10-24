@@ -43,8 +43,8 @@ int main(){
     float x ,resultado;
     cin>>a;
     cin>>b;
-    cin>>ex_funcion;
     cin>>err;
+    cin>>ex_funcion;
     //vector de tipo string que contendra los caracteres de la cadena de entrada
     vector <string> expresion;
     //convierte la cadena a un vector de cadenas
