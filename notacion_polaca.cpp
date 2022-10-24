@@ -72,6 +72,8 @@ int main(){
     gn=integral_g(xi1,expresion);
     cout<<a<<endl;
     cout<<b<<endl;
+    cout<<err<<endl;
+    cout<<ex_funcion<<endl;
     do{
         xi1=calcularXi(b,a,n);
         gn=integral_g(xi1,expresion);
@@ -84,7 +86,6 @@ int main(){
     n=n-1;
     cout<<gn<<endl;
     cout<<n<<endl;
-    cout<<err_abs;
 }
 vector<float> calcularXi(float b,float a,int n){
     float dx = (b - a)/n;
