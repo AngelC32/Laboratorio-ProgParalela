@@ -45,9 +45,8 @@ int main(){
     //cin>>ex_funcion;
     //cout<<"x=";
     //cin>>x;
-    //vector de tipo string que contendrá los caracteres de la cadena de entrada
+    //vector de tipo string que contendra los caracteres de la cadena de entrada
     vector <string> expresion;
-
     //convierte la cadena a un vector de cadenas
     for(int i=0;i<ex_funcion.size();i++){
         concatenado=string(1,ex_funcion[i]);
@@ -69,20 +68,16 @@ int main(){
     }
     //resultado=funcion(x,expresion);
     //cout<<"f("<<x<<")="<<resultado;
-
-
-
     cout<<a<<endl;
     cout<<b<<endl;
-    cout<<err<<endl;
-    cout<<ex_funcion<<endl;
-    vector<float> xi1=calcularXi(b,a,n);
+    /*cout<<err<<endl;
+    cout<<ex_funcion<<endl;*/
     do{
         vector<float> xi1=calcularXi(b,a,n);
-        gn=0;
-        gnmas1=0;
+        //cout<<xi1[xi1.size()-1]<<"\n";
         gn=integral_g(xi1,expresion);
         vector<float> xi2=calcularXi(b,a,n+1);
+        //cout<<xi2[xi2.size()-1]<<"\n";
         gnmas1=integral_g(xi2,expresion);
         err_abs= abs(gnmas1-gn);
         n++;
@@ -94,13 +89,15 @@ int main(){
     cout<<err_abs;
 }
 vector<float> calcularXi(float b,float a,int n){
-    double dx = (float) (b - a)/n;
+    float dx = (b - a)/n;
+    //cout<<n<<". "<<"dx: "<<dx<<",";
     vector <float>xi;
     // calculando los limites
     for (int i = 0; i < n; i++) {
         //xi[i] = a + (i*dx);
         xi.push_back(a+(i*dx));
     }
+    xi.push_back(b);
     return xi;
 }
 float integral_g( vector <float> xi, vector <string> fx){
@@ -114,7 +111,7 @@ float integral_g( vector <float> xi, vector <string> fx){
 int obtener_prioridad(string operador){
     char caracter;
     // convierte el string ingresado en un caracter, para poder evaluarlo en el switch
-    // en el caso de numeros de más de una cifra se toma la primera
+    // en el caso de numeros de mï¿½s de una cifra se toma la primera
     caracter=operador[0];
     switch(caracter){
         case '^': return 4;
