@@ -10,15 +10,41 @@ int obtener_prioridad(string operador);
 vector <string> convertirA_Polaca(vector <string> exp_infija);
 float evaluar_expresion(vector <string> exp);
 float funcion(float x, vector<string> fx);
-
+vector<float> calcularXi(float b,float a,int n);
+float integral_g( vector <float> xi, vector <string> fx);
 int main(){
 
+    /*
+        Entradas:
+
+            a b         --> intervalo
+            err_abs     --> error absoluto admisible
+            str_func    --> funcion a integrar
+
+        Salidas:
+
+            val         --> valor de la integral
+            n           --> particiones necesarias (precision)
+    */
+
+	/*
+		3 5
+        0.001
+        (x+2)^2
+
+        26.6666
+        4
+    */
+
+	int a=3, b=5, n=1;
+    float err=0.001, err_abs=0, dx, val,gn=0,gnmas1=0;
     string ex_funcion="",concatenado="";
+    ex_funcion="(x+2)^2";
     float x ,resultado;
-    cout<<"f(x)=";
-    cin>>ex_funcion;
-    cout<<"x=";
-    cin>>x;
+    //cout<<"f(x)=";
+    //cin>>ex_funcion;
+    //cout<<"x=";
+    //cin>>x;
     //vector de tipo string que contendrá los caracteres de la cadena de entrada
     vector <string> expresion;
 
@@ -41,9 +67,50 @@ int main(){
             expresion.push_back(concatenado);
         }
     }
-    resultado=funcion(x,expresion);
-    cout<<"f("<<x<<")="<<resultado;
+    //resultado=funcion(x,expresion);
+    //cout<<"f("<<x<<")="<<resultado;
+
+
+
+    cout<<a<<endl;
+    cout<<b<<endl;
+    cout<<err<<endl;
+    cout<<ex_funcion<<endl;
+    vector<float> xi1=calcularXi(b,a,n);
+    do{
+        vector<float> xi1=calcularXi(b,a,n);
+        gn=0;
+        gnmas1=0;
+        gn=integral_g(xi1,expresion);
+        vector<float> xi2=calcularXi(b,a,n+1);
+        gnmas1=integral_g(xi2,expresion);
+        err_abs= abs(gnmas1-gn);
+        n++;
+    }
+    while (err < err_abs);
+    n=n-1;
+    cout<<n<<endl;
+    cout<<gn<<endl;
+    cout<<err_abs;
 }
+vector<float> calcularXi(float b,float a,int n){
+    double dx = (float) (b - a)/n;
+    vector <float>xi;
+    // calculando los limites
+    for (int i = 0; i < n; i++) {
+        //xi[i] = a + (i*dx);
+        xi.push_back(a+(i*dx));
+    }
+    return xi;
+}
+float integral_g( vector <float> xi, vector <string> fx){
+    float sumatoria=0;
+    for(int i=0;i<xi.size();i++){
+        sumatoria+=(xi[i+1]-xi[i])*((funcion(xi[i+1],fx)-funcion(xi[i],fx))/2);
+    }
+    return sumatoria;
+}
+
 int obtener_prioridad(string operador){
     char caracter;
     // convierte el string ingresado en un caracter, para poder evaluarlo en el switch
