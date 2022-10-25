@@ -8,55 +8,61 @@ using namespace std;
 
 int getPriority(char c);
 bool isOperator(char c);
-string to_polac(string inf_exp);
-double do_op(char op, double a, double b);
-double operate_exp(string exp, double x);
-double integral(int a, int b, int n, string f);
+string toPolacExp(string inf_exp);
+double operateBinomialExp(char op, double a, double b);
+double operatePolacExp(string exp, double x);
+double getIntegralByTrapezoidRule(int a, int b, int n, string f);
 
 /*
     Entradas:
 
         a b         --> intervalo
-        err_abs     --> error absoluto admisible
+        err_abs_adm	--> error absoluto admisible
         str_func    --> funcion a integrar
 
     Salidas:
 
-        val         --> valor de la integral
+        gn         --> valor de la integral
         n           --> particiones necesarias (precision)
 */
 
 int main() {
-	//string str_inf_exp = "(30.5*X^2+25*x)r2";
-    //string str_inf_exp = "(10+x)*(2-7)";
-
-	string str_inf_exp="(x+2)^2", str_polac_exp;
-    double err, err_abs;
+	string str_inf_exp, str_polac_exp;
+    double err, err_abs_adm;
     double gn, gn_plus_one;
-    int a=3, b=5, n=14;
+    int a, b, n=1;
 
+    cin >> a >> b;
+    cin >> err_abs_adm;
+    cin >> str_inf_exp;
 
-    //cin >> a >> b;
-    //cin >> err_abs;
-    //cin >> str_inf_exp;
+    str_polac_exp = toPolacExp(str_inf_exp);
 
-    str_polac_exp = to_polac(str_inf_exp);
+    while(true) {
+        gn = getIntegralByTrapezoidRule(a,b,n,str_polac_exp);
+        gn_plus_one = getIntegralByTrapezoidRule(a,b,n+1,str_polac_exp);
+        err = abs(gn_plus_one - gn);
 
-    gn = integral(a,b,n,str_polac_exp);
-    //gn_plus_one = integral(a,b,n+1,str_polac_exp);
-    //err = gn_plus_one - gn;
-
-    // while (err > err_abs) {
-    //     break;
-    // }
+        if(err <= err_abs_adm) {
+            break;
+        }
+        n++;
+    }
 
     cout << gn <<endl;
-    //cout << n <<endl;
+    cout << n <<endl;
 
 	return 0;
 }
 
-double integral(int a, int b, int n, string f) {
+/*
+	Formula usada:
+	
+	 b
+	S| f(x)dx  =~ (dx/2) * [f(x0) + f(x1) + ... + f(n-1) + f(xn)]
+	 a
+*/
+double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
     double sum=0, dx, xi[n+1];
 
     dx = (float) (b - a)/n;
@@ -67,15 +73,16 @@ double integral(int a, int b, int n, string f) {
     } 
 
     for (int i = 1; i < n; i++) {
-        sum += 2*operate_exp(f, xi[i]);
+        sum += 2*operatePolacExp(f, xi[i]);
     }
 
-    sum += operate_exp(f, xi[0]) + operate_exp(f, xi[n]);
+    sum += operatePolacExp(f, xi[0]) + operatePolacExp(f, xi[n]);
     sum *= dx/2;
 
     return sum;
 }
 
+// Obtiene la prioridad de las operaciones a ejecutar
 int getPriority(char c) {
 	switch (c) {
 		case '(':
@@ -92,12 +99,14 @@ int getPriority(char c) {
 	return 0;
 }
 
+// Es o no operador
 bool isOperator(char c) {
 	return c == '*' || c == '/' || c == '+' || c == '-' || 
 			c == '^' || c == 'r' || c == 'l';
 }
 
-string to_polac(string inf_exp) {
+//Tansformación a expresion polaca
+string toPolacExp(string inf_exp) {
 
     stack<char> stack_sign;
     stack<string> stack_op;
@@ -192,7 +201,8 @@ string to_polac(string inf_exp) {
     return stack_op.top();
 }
 
-double do_op(char op, double a, double b) {
+//Realiza una operación entre 2 numeros dados
+double operateBinomialExp(char op, double a, double b) {
     switch (op) {
         case '+': return a + b; break;
         case '-': return a - b; break;
@@ -205,7 +215,8 @@ double do_op(char op, double a, double b) {
 	return 0;
 }
 
-double operate_exp(string exp, double x) {
+//Opera a partir de una expresion polaca dada y una variable (opcional)
+double operatePolacExp(string exp, double x) {
     double op1, op2, res;
     stack<double> out_stack;
 	string num = "";
@@ -230,7 +241,7 @@ double operate_exp(string exp, double x) {
             op2 = out_stack.top();
             out_stack.pop();
 
-            res = do_op(c, op1, op2);
+            res = operateBinomialExp(c, op1, op2);
             out_stack.push(res);
 
         } else if (isdigit(c)) {
