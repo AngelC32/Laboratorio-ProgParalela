@@ -28,48 +28,50 @@ double integral(int a, int b, int n, string f);
 
 int main() {
 	//string str_inf_exp = "(30.5*X^2+25*x)r2";
-    string str_inf_exp = "(10+x)*(2-7)";
+    //string str_inf_exp = "(10+x)*(2-7)";
 
-	string str_polac_exp;
-    double err, err_abs, x=5.53146;
-    double gn, gn_plus_one, res;
-    int a, b;
+	string str_inf_exp="(x+2)^2", str_polac_exp;
+    double err, err_abs;
+    double gn, gn_plus_one;
+    int a=3, b=5, n=14;
+
 
     //cin >> a >> b;
     //cin >> err_abs;
-    // cin >> str_inf_exp;
+    //cin >> str_inf_exp;
 
     str_polac_exp = to_polac(str_inf_exp);
-    cout << str_polac_exp <<endl;
 
-    res = operate_exp(str_polac_exp, x);
-    cout << res <<endl;
+    gn = integral(a,b,n,str_polac_exp);
+    //gn_plus_one = integral(a,b,n+1,str_polac_exp);
+    //err = gn_plus_one - gn;
 
     // while (err > err_abs) {
-        
-    //     gn = 1;
-
-
     //     break;
     // }
-    
-    system("pause");
+
+    cout << gn <<endl;
+    //cout << n <<endl;
+
 	return 0;
 }
 
 double integral(int a, int b, int n, string f) {
-    double sum, dx, xi[n];
+    double sum=0, dx, xi[n+1];
 
     dx = (float) (b - a)/n;
+
     // calculando los limites
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n+1; i++) {
         xi[i] = a + (i*dx);
     } 
 
-    for (int i = 1; i < n-1; i++) {
+    for (int i = 1; i < n; i++) {
         sum += 2*operate_exp(f, xi[i]);
     }
-    sum += dx/2 * (operate_exp(f, xi[0]) + operate_exp(f, xi[n-1]));
+
+    sum += operate_exp(f, xi[0]) + operate_exp(f, xi[n]);
+    sum *= dx/2;
 
     return sum;
 }
@@ -87,6 +89,7 @@ int getPriority(char c) {
 		default:
 			return 4;
 	}
+	return 0;
 }
 
 bool isOperator(char c) {
@@ -214,16 +217,12 @@ double operate_exp(string exp, double x) {
 
         if(c == 'x' || c == 'X') {
 			exp.replace(i,1,to_string(x));
-            //exp[i] = (char) (x + 48);
         }
     }
-    cout << exp <<endl;
-    cout << "____TESTING____" <<endl;
 
     //Evaluar
     for (int i=exp.length()-1; i >= 0; i--) {
         c = exp[i];
-		//cout << "___TESTING___c__"<< c <<endl;
 
         if(isOperator(c)) {
             op1 = out_stack.top();
@@ -236,7 +235,6 @@ double operate_exp(string exp, double x) {
 
         } else if (isdigit(c)) {
             while (exp[i] != ' ') {
-                //cout << "___TESTING___exp__"<< exp[i] <<endl;
                 num = string(1, exp[i]) + num;
                 i--;
             }
