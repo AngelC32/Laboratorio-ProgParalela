@@ -10,81 +10,68 @@ int getPriority(char c);
 bool isOperator(char c);
 string to_polac(string inf_exp);
 double do_op(char op, double a, double b);
-double operate_exp(string exp, int x);
+double operate_exp(string exp, double x);
+double integral(int a, int b, int n, string f);
+
+/*
+    Entradas:
+
+        a b         --> intervalo
+        err_abs     --> error absoluto admisible
+        str_func    --> funcion a integrar
+
+    Salidas:
+
+        val         --> valor de la integral
+        n           --> particiones necesarias (precision)
+*/
 
 int main() {
-	string str_inf_exp = "(30.5*X^2+25*x)r2";
-	//string str_inf_exp = "(10+235)*(20-X)";
+	//string str_inf_exp = "(30.5*X^2+25*x)r2";
+    string str_inf_exp = "(10+x)*(2-7)";
+
 	string str_polac_exp;
-    double res;
-    int x = 5;
-	
+    double err, err_abs, x=5.53146;
+    double gn, gn_plus_one, res;
+    int a, b;
+
+    //cin >> a >> b;
+    //cin >> err_abs;
     // cin >> str_inf_exp;
-	cout << str_inf_exp <<endl;
-	
+
     str_polac_exp = to_polac(str_inf_exp);
     cout << str_polac_exp <<endl;
 
-    //res = operate_exp(str_polac_exp, x);
-    //cout << res;
-	
-	/*
-        Entradas:
-
-            a b         --> intervalo
-            err_abs     --> error absoluto admisible
-            str_func    --> funcion a integrar
-
-        Salidas:
-
-            val         --> valor de la integral
-            n           --> particiones necesarias (precision)
-    */
-
-	/*
-		3 5
-        0.001
-        (x+2)^2
-
-        26.6666
-        4
-    */
-	
-	// int a, b, n=2;
-    // double err, err_abs, dx, val;
-    // string func;
+    res = operate_exp(str_polac_exp, x);
+    cout << res <<endl;
 
     // while (err > err_abs) {
-    //     // code
+        
+    //     gn = 1;
+
 
     //     break;
     // }
+    
+    system("pause");
+	return 0;
+}
 
-
-    /*
+double integral(int a, int b, int n, string f) {
+    double sum, dx, xi[n];
 
     dx = (float) (b - a)/n;
-
-
     // calculando los limites
     for (int i = 0; i < n; i++) {
         xi[i] = a + (i*dx);
-    }
-    
+    } 
+
     for (int i = 1; i < n-1; i++) {
-        sum += 2*f(xi[i]);
+        sum += 2*operate_exp(f, xi[i]);
     }
+    sum += dx/2 * (operate_exp(f, xi[0]) + operate_exp(f, xi[n-1]));
 
-    sum += dx/2 * (f(xi[0]) + f(xi[n-1]));
-
-
-    cout << a <<endl;
-    cout << b <<endl;
-    cout << err_abs <<endl;
-    cout << func <<endl;
-    */
-
-	return 0;
+    return sum;
 }
 
 int getPriority(char c) {
@@ -215,7 +202,7 @@ double do_op(char op, double a, double b) {
 	return 0;
 }
 
-double operate_exp(string exp, int x) {
+double operate_exp(string exp, double x) {
     double op1, op2, res;
     stack<double> out_stack;
 	string num = "";
@@ -226,10 +213,12 @@ double operate_exp(string exp, int x) {
         c = exp[i];
 
         if(c == 'x' || c == 'X') {
-            exp[i] = (char) (x + 48);
+			exp.replace(i,1,to_string(x));
+            //exp[i] = (char) (x + 48);
         }
     }
-    //cout << exp <<endl;
+    cout << exp <<endl;
+    cout << "____TESTING____" <<endl;
 
     //Evaluar
     for (int i=exp.length()-1; i >= 0; i--) {
