@@ -68,8 +68,6 @@ int main(){
     }
 
     vector<float> xi1,xi2;
-    xi1=calcularXi(b,a,n);
-    gn=integral_g(xi1,expresion);
     do{
         xi1=calcularXi(b,a,n);
         gn=integral_g(xi1,expresion);
