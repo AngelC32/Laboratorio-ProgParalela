@@ -1,5 +1,6 @@
 # executables
-trapezoidal.exe
+trapezoidal_secuential.exe
+trapezoidal_parallel.exe
 
 # misc
 .vscode
