@@ -78,6 +78,9 @@ double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
 
 #pragma omp parallel
  {
+	int id = omp_get_thread_num();
+    int step = omp_get_num_threads();
+	
     // calculando los limites
     for (int i = 0; i < n-1; i++) {
         xi[i] = a + ((i+1)*dx);
@@ -91,6 +94,8 @@ double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
      }
     }
  }
+
+	#pragma omp barrier
     sum += operatePolacExp(f, a) + operatePolacExp(f, b);
     sum *= dx/2;
 
