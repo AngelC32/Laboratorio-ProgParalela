@@ -3,6 +3,7 @@
 #include <stack>
 #include <cmath>
 #include <ctype.h>
+#include <chrono>
 
 using namespace std;
 
@@ -38,9 +39,10 @@ int main() {
 
     str_polac_exp = toPolacExp(str_inf_exp);
 
+    auto start = chrono::steady_clock::now();
     while(true) {
-        gn = getIntegralByTrapezoidRule(a,b,n,str_polac_exp);
-        gn_plus_one = getIntegralByTrapezoidRule(a,b,n+1,str_polac_exp);
+        gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
+        gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
         err = abs(gn_plus_one - gn);
 
         if(err <= err_abs_adm) {
@@ -48,7 +50,10 @@ int main() {
         }
         n++;
     }
+    auto end = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_seconds = end-start;
 
+	//cout << elapsed_seconds.count() <<endl;
     cout << gn <<endl;
     cout << n <<endl;
 
@@ -59,24 +64,24 @@ int main() {
 	Formula usada:
 	
 	 b
-	S| f(x)dx  =~ (dx/2) * [f(x0) + f(x1) + ... + f(n-1) + f(xn)]
+	S| f(x)dx  =~ (dx/2) * [f(x0) + 2f(x1) + ... + 2f(n-1) + f(xn)]
 	 a
 */
 double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
-    double sum=0, dx, xi[n+1];
+    double sum=0, dx, xi[n-1];
 
     dx = (float) (b - a)/n;
 
     // calculando los limites
-    for (int i = 0; i < n+1; i++) {
-        xi[i] = a + (i*dx);
+    for (int i = 0; i < n-1; i++) {
+        xi[i] = a + ((i+1)*dx);
     } 
 
-    for (int i = 1; i < n; i++) {
+    for (int i = 0; i < n-1; i++) {
         sum += 2*operatePolacExp(f, xi[i]);
     }
 
-    sum += operatePolacExp(f, xi[0]) + operatePolacExp(f, xi[n]);
+    sum += operatePolacExp(f, a) + operatePolacExp(f, b);
     sum *= dx/2;
 
     return sum;
