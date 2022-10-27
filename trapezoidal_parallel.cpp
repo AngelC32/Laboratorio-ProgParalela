@@ -29,37 +29,34 @@ double getIntegralByTrapezoidRule(int a, int b, int n, string f);
 */
 
 int main() {
-	string str_inf_exp="(x+2)^2", str_polac_exp;
+	string str_inf_exp, str_polac_exp;
     double err, err_abs_adm;
     double gn, gn_plus_one;
-    int a=3, b=5, n=14;
+    int a, b, n=1;
 
-    //cin >> a >> b;
-    //cin >> err_abs_adm;
-    //cin >> str_inf_exp;
+    cin >> a >> b;
+    cin >> err_abs_adm;
+    cin >> str_inf_exp;
 
     str_polac_exp = toPolacExp(str_inf_exp);
 
-    // auto start = chrono::steady_clock::now();
-    // while(true) {
-    //     gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
-    //     gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
-    //     err = abs(gn_plus_one - gn);
+    auto start = chrono::steady_clock::now();
+    while(true) {
+        gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
+        gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
+        err = abs(gn_plus_one - gn);
 
-    //     if(err <= err_abs_adm) {
-    //         break;
-    //     }
-    //     n++;
-    // }
-    // auto end = chrono::steady_clock::now();
-    // chrono::duration<double> elapsed_seconds = end-start;
+        if(err <= err_abs_adm) {
+            break;
+        }
+        n++;
+    }
+    auto end = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_seconds = end-start;
 
-	// //cout << elapsed_seconds.count() <<endl;
-    // cout << gn <<endl;
-    // cout << n <<endl;
-
-    gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
+	//cout << "time elapsed: " << elapsed_seconds.count() <<endl;
     cout << gn <<endl;
+    cout << n <<endl;
 
 	return 0;
 }
@@ -76,26 +73,24 @@ double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
 
     dx = (float) (b - a)/n;
 
-#pragma omp parallel
+#pragma omp parallel num_threads(2)
  {
 	int id = omp_get_thread_num();
     int step = omp_get_num_threads();
 	
     // calculando los limites
-    for (int i = 0; i < n-1; i++) {
+    for (int i = id; i < n-1; i+=step) {
         xi[i] = a + ((i+1)*dx);
     } 
 
-    for (int i = 0; i < n-1; i++) {
+    for (int i = id; i < n-1; i+=step) {
         tmp = 2*operatePolacExp(f, xi[i]);
-    #pragma omp critical
-     {
+
+		#pragma omp atomic
         sum += tmp;
-     }
     }
  }
-
-	#pragma omp barrier
+	
     sum += operatePolacExp(f, a) + operatePolacExp(f, b);
     sum *= dx/2;
 
