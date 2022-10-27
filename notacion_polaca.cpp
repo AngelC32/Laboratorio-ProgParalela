@@ -39,7 +39,6 @@ int main(){
 	int a, b, n=1;
     float err=0, err_abs=0, dx, val,gn=0,gnmas1=0;
     string ex_funcion="",concatenado="";
-    ex_funcion="(x+2)^2";
     float x ,resultado;
     cin>>a;
     cin>>b;
@@ -80,6 +79,7 @@ int main(){
     n=n-1;
     cout<<gn<<endl;
     cout<<n<<endl;
+    return 0;
 }
 vector<float> calcularXi(float b,float a,int n){
     float dx = (b - a)/n;
@@ -149,7 +149,7 @@ vector <string>convertirA_Polaca(vector <string> exp){ //notacion polaca es nota
                 //si la prioridad del caracter o string es menor o igual que el de la pila
                 if(obtener_prioridad(exp[i])<=obtener_prioridad(pila_operadores.top())){
                     //desapila hasta que la prioridad del elemento sea menor o igual que el caracter o string del vector
-                    while(!pila_operadores.empty()&&obtener_prioridad(exp[i])<obtener_prioridad(pila_operadores.top())){
+                    while(!pila_operadores.empty()&&obtener_prioridad(exp[i])<=obtener_prioridad(pila_operadores.top())){
                         exp_convertido.push_back(pila_operadores.top());
                         pila_operadores.pop();
                     }
