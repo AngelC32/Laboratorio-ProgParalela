@@ -2,3 +2,5 @@
 .vscode
 # Ignore compiled files
 *.a
+# Ignore test files
+prueba.cpp
