@@ -1,6 +1,9 @@
 # executables
 trapezoidal_secuential.exe
 trapezoidal_parallel.exe
-
+resultados.csv
+output.txt
+output_parallel.txt
+output secuencial.txt
 # misc
 .vscode
