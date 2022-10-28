@@ -22,10 +22,8 @@ program = subprocess.run(['./trapezoidal_parallel.exe'],
                         capture_output=True, 
                         text=True, 
                         input=input.stdout)
-
-x=program.stdout.find("\n")
-cadena=program.stdout[x+1:]
+cadena=program.stdout
 print(cadena)
-with open('output_parallel.txt', 'w') as f:
+with open('output', 'w') as f:
     f.write(cadena)
 f.close()

@@ -5,6 +5,7 @@ trapezoidal_secuential.o
 trapezoidal_parallel.o
 resultados.csv
 output.txt
+output
 output_parallel.txt
 output_secuential.txt
 # misc

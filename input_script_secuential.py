@@ -22,10 +22,8 @@ program = subprocess.run(['./trapezoidal_secuential.exe'],
                         capture_output=True, 
                         text=True, 
                         input=input.stdout)
-
-x=program.stdout.find("\n")
-cadena=program.stdout[x+1:]
+cadena=program.stdout
 print(cadena)
-with open('output_secuential.txt', 'w') as f:
+with open('output', 'w') as f:
     f.write(cadena)
 f.close()
