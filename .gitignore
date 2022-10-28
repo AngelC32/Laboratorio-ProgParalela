@@ -1,6 +1,8 @@
 # executables
 trapezoidal_secuential.exe
 trapezoidal_parallel.exe
+trapezoidal_secuential.o
+trapezoidal_parallel.o
 resultados.csv
 output.txt
 output_parallel.txt
