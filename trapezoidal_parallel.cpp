@@ -12,7 +12,7 @@ int getPriority(char c);
 bool isOperator(char c);
 string toPolacExp(string inf_exp);
 double operateBinomialExp(char op, double a, double b);
-double operatePolacExp(string exp, double x);
+double operatePolacExp(string exp, double var);
 double getIntegralByTrapezoidRule(int a, int b, int n, string f);
 
 /*
@@ -44,7 +44,7 @@ int main() {
     while(true) {
         gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
         gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
-        err = abs(gn_plus_one - gn);
+        err = gn - gn_plus_one;
 
         if(err <= err_abs_adm) {
             break;
@@ -54,7 +54,7 @@ int main() {
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
 
-	//cout << "time elapsed: " << elapsed_seconds.count() <<endl;
+	//cout << elapsed_seconds.count() <<endl;
     cout << gn <<endl;
     cout << n <<endl;
 
@@ -71,7 +71,7 @@ int main() {
 double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
     double sum=0, dx, xi[n-1], tmp;
 
-    dx = (float) (b - a)/n;
+    dx = ((b - a)*1.0)/n;
 
 #pragma omp parallel num_threads(2)
  {
@@ -166,7 +166,7 @@ string toPolacExp(string inf_exp) {
         else if (!isOperator(c)) {
             //Validar si existen numeros de mas de 1 cifra
             while ( isdigit(inf_exp[i]) || inf_exp[i] == '.' || 
-                    inf_exp[i] == 'x' || inf_exp[i] == 'X') {
+					(!isOperator(inf_exp[i]) && isalpha(inf_exp[i]))) {
 
                 num += string(1, inf_exp[i]);
                 i++;
@@ -180,7 +180,7 @@ string toPolacExp(string inf_exp) {
         else {
 			// Ordenamos el operador entrante segun el orden de precedencia
             while(!stack_sign.empty() && 
-				getPriority(c) <= getPriority(stack_sign.top())) {
+				getPriority(c) < getPriority(stack_sign.top())) {
 
                 op1 = stack_op.top();
                 stack_op.pop();
@@ -231,20 +231,11 @@ double operateBinomialExp(char op, double a, double b) {
 }
 
 //Opera a partir de una expresion polaca dada y una variable (opcional)
-double operatePolacExp(string exp, double x) {
+double operatePolacExp(string exp, double var) {
     double op1, op2, res;
     stack<double> out_stack;
 	string num = "";
     char c;
-    
-    // Reemplazar variable
-    for (int i=0; i < exp.length(); i++) {
-        c = exp[i];
-
-        if(c == 'x' || c == 'X') {
-			exp.replace(i,1,to_string(x));
-        }
-    }
 
     //Evaluar
     for (int i=exp.length()-1; i >= 0; i--) {
@@ -260,13 +251,17 @@ double operatePolacExp(string exp, double x) {
             out_stack.push(res);
 
         } else if (isdigit(c)) {
+            //arma los numeros en caso de ser > a 1 cifra
             while (exp[i] != ' ') {
                 num = string(1, exp[i]) + num;
                 i--;
             }
             out_stack.push(stod(num));       
             num = "";
-        }
+
+        } else if (!isOperator(c) && isalpha(c)) { //validar variable
+			out_stack.push(var);
+		}
     }
 
     return out_stack.top();
