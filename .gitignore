@@ -6,6 +6,6 @@ trapezoidal_parallel.o
 resultados.csv
 output.txt
 output_parallel.txt
-output_secuencial.txt
+output_secuential.txt
 # misc
 .vscode
