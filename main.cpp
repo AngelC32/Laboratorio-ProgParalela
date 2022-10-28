@@ -170,8 +170,6 @@ double operacion(char letra, double num1, double num2){
     }
 }
 
-
-/*
 float calculoIntegral(int limSup, int limInf, double error){
     float errorAbs = 0;
     float sumAreas = 0;
@@ -195,4 +193,3 @@ float calculoIntegral(int limSup, int limInf, double error){
     }
 }
 
-*/

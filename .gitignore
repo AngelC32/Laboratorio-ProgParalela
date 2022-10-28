@@ -1,2 +1,4 @@
-.vscode/*
-./main
+# Ignore .vscode folder
+.vscode
+# Ignore compilation archives
+*.a
