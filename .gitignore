@@ -1,6 +1,4 @@
 # Ignore .vscode folder
 .vscode
-# Ignore compilation archives
-trap_paral
-# Ignore .gitignore file
-.gitignore
+# Ignore compiled files
+*.a
