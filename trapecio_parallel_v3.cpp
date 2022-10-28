@@ -47,7 +47,11 @@ int main() {
 
     #pragma omp parallel
     {
+        // Región paralela
+
+        // Creación de un montón de subprocesos de trabajo (n subprocesos)
         #pragma omp single
+        // Elección de un subproceso de trabajo (aleatorio)
         {
             // Valor de la integral
             gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
@@ -57,15 +61,21 @@ int main() {
             // Calcula el error
             err = abs(gn_plus_one - gn);
             // Mientras el error sea mayor al error absoluto admisible
+
+            // Paralelizar el bucle while
+            #pragma omp task
             while (err > err_abs_adm) {
+                // Actualiza el valor de la integral
                 gn = gn_plus_one;
                 n++;
-                // Mostrar el valor de n
                 gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
                 err = abs(gn_plus_one - gn);
+                
             }
 
-        }
+        } // barrier of single construct
+
+        // fin de la región paralela
     } 
 
     /*

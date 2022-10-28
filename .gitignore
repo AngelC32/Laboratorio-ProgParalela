@@ -1,6 +1,6 @@
 # Ignore .vscode folder
 .vscode
 # Ignore compiled files
-*.a
+*.out
 # Ignore test files
 prueba.cpp
