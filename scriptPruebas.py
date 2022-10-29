@@ -21,64 +21,81 @@ input = subprocess.run(['cat', 'input'],
 # print(input.stdout)
 
 ditc= {}
-headersCSV = ['Secuencial', 'Secuencial_improved','Paralela','Paralala_improved']
+#headersCSV = ['Secuencial', 'Secuencial_improved','Paralela','Paralala_improved']
+headersCSV = ['Secuencial', 'Secuencial_improved','Paralela']
 with open('resultados.csv', 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headersCSV)
         writer.writeheader()
 
 csvfile.close()
 #iteracion trapezoidal_secuential
+lista_secuencial=[]
 for i in range(15):
-    secuencial = subprocess.run(['./trapezoidal_secuential.exe'], 
+    proceso = subprocess.run(['./trapezoidal_secuential.exe'], 
                             capture_output=True, 
                             text=True, 
                             input=input.stdout)
-
+    salto= proceso .stdout.find("\n")
+    tiempo= proceso .stdout[0:salto]
+    lista_secuencial.append(tiempo)
 #iteracion trapezoidal_secuential_improved
+lista_secuencial_improved=[]
 for i in range(15):
-    secuencial_improved = subprocess.run(['./trapezoidal_secuential_improved.exe'], 
+    proceso = subprocess.run(['./trapezoidal_secuential_improved.exe'], 
                             capture_output=True, 
                             text=True, 
                             input=input.stdout)
-
-#iteracion trapezoidal_parallel
-for i in range(15):
-    paralela = subprocess.run(['./trapezoidal_parallel.exe'], 
-                            capture_output=True, 
-                            text=True, 
-                            input=input.stdout)
-
-#iteracion trapezoidal_parallel_improved
-for i in range(15):
-    paralela_improved = subprocess.run(['./trapezoidal_parallel_improved.exe'], 
-                            capture_output=True, 
-                            text=True, 
-                            input=input.stdout)
-
-    # captura las primeras lineas de las salidas
-    salto_secuencial= secuencial.stdout.find("\n")
-    tiempo_secuencial= secuencial.stdout[0:salto_secuencial]
-
-    salto_secuencial_improved = secuencial_improved.stdout.find("\n")
-    tiempo_secuencial_improved = secuencial_improved.stdout[0:salto_secuencial_improved]
-
-    salto_paralelo= paralela.stdout.find("\n")
-    tiempo_paralela= paralela.stdout[0:salto_paralelo]
+    salto= proceso .stdout.find("\n")
+    tiempo= proceso .stdout[0:salto]
+    lista_secuencial_improved.append(tiempo)
     
-    salto_paralelo_improved= paralela_improved.stdout.find("\n")
-    tiempo_paralela_improved= paralela_improved.stdout[0:paralela_improved]
+#iteracion trapezoidal_parallel
+lista_trapezoidal_parallel=[]
+for i in range(15):
+    proceso = subprocess.run(['./trapecio_parallel.exe'], 
+                            capture_output=True, 
+                            text=True, 
+                            input=input.stdout)
+    salto= proceso .stdout.find("\n")
+    tiempo= proceso .stdout[0:salto]
+    dict= {'Paralela':proceso}
+    lista_trapezoidal_parallel.append(tiempo)
 
-
+for i in range (15):
+        dict= {'Secuencial':lista_secuencial[0],'Secuencial_improved':lista_secuencial_improved[0],
+                'Paralela':lista_trapezoidal_parallel[0]
+        }       
+        with open('resultados.csv', 'a', newline='') as f_object:
+                dictwriter_object = DictWriter(f_object, fieldnames=headersCSV)
+                dictwriter_object.writerow(dict)
+        f_object.close()
+'''
+#iteracion trapezoidal_parallel_improved
+lista_trapezoidal_parallel_improved=[]
+for i in range(15):
+    proceso = subprocess.run(['./trapezoidal_parallel_improved.exe'], 
+                            capture_output=True, 
+                            text=True, 
+                            input=input.stdout)
+    salto= proceso .stdout.find("\n")
+    tiempo= proceso .stdout[0:salto]
+    dict= {'Paralela_improved':proceso}
+    with open('resultados.csv', 'a', newline='') as f_object:
+        dictwriter_object = DictWriter(f_object, fieldnames=headersCSV)
+        dictwriter_object.writerow(dict)
+    f_object.close()
+'''
     #guardar tiempos de ejecución
-    '''
+'''
     tiempo_secuencial=timeit.timeit('secuencial','from __main__ import secuencial')
     tiempo_paralela=timeit.timeit('paralela','from __main__ import paralela')
      '''
     #guardar en el archivo resultados
+
+'''
     dict= {'Secuencial':tiempo_secuencial,'Secuencial_improved':tiempo_secuencial_improved,
                 'Paralela':tiempo_paralela,'Paralela_improved':tiempo_paralela_improved}
     with open('resultados.csv', 'a', newline='') as f_object:
         dictwriter_object = DictWriter(f_object, fieldnames=headersCSV)
         dictwriter_object.writerow(dict)
-       
-f_object.close()
+       '''
