@@ -1,4 +1,10 @@
 ## Curso: Programación Paralela y Concurrente
+## Laboratorio N°1
 ## Profesor: Edson Ticona
 ## Grupo 7
-## Laboratorio N°1
+## Integrantes
+| Apellidos | Nombres |
+| --------- | ------- |
+| Gonzales Pardo | Francisco Alexander Fernando |
+| Tocto Mallqui | Alexis |
+| Carmen Cruzatti| Angel Gerardo |
