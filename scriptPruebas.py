@@ -21,7 +21,7 @@ input = subprocess.run(['cat', 'input'],
 # print(input.stdout)
 
 ditc= {}
-headersCSV = ['Secuencial', 'Secuencial_improved','Paralela']
+headersCSV = ['Secuencial', 'Secuencial_improved','Paralela','Paralala_improved']
 with open('resultados.csv', 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headersCSV)
         writer.writeheader()
@@ -44,12 +44,7 @@ for i in range(15):
                             text=True, 
                             input=input.stdout)
 
-    paralela_improved_v1 = subprocess.run(['./trapezoidal_parallel_improved_v1.exe'], 
-                            capture_output=True, 
-                            text=True, 
-                            input=input.stdout)
-
-    paralela_improved_v2 = subprocess.run(['./trapezoidal_parallel_improved_v2.exe'], 
+    paralela_improved = subprocess.run(['./trapezoidal_parallel_improved.exe'], 
                             capture_output=True, 
                             text=True, 
                             input=input.stdout)
@@ -64,11 +59,9 @@ for i in range(15):
     salto_paralelo= paralela.stdout.find("\n")
     tiempo_paralela= paralela.stdout[0:salto_paralelo]
     
-    salto_paralelo_improved_v1= paralela_improved_v1.stdout.find("\n")
-    tiempo_paralela_improved_v1= paralela_improved_v1.stdout[0:paralela_improved_v1]
+    salto_paralelo_improved= paralela_improved.stdout.find("\n")
+    tiempo_paralela_improved= paralela_improved.stdout[0:paralela_improved]
 
-    salto_paralelo_improved_v2= paralela_improved_v2.stdout.find("\n")
-    tiempo_paralela_improved_v2= paralela_improved_v2.stdout[0:paralela_improved_v2]
 
     #guardar tiempos de ejecución
     '''
@@ -77,7 +70,7 @@ for i in range(15):
      '''
     #guardar en el archivo resultados
     dict= {'Secuencial':tiempo_secuencial,'Secuencial_improved':tiempo_secuencial_improved,
-                'Paralela':tiempo_paralela,'Paralela_improved_v1':tiempo_paralela_improved_v1,'Paralela_improved_v2':tiempo_paralela_improved_v2}
+                'Paralela':tiempo_paralela,'Paralela_improved':tiempo_paralela_improved}
     with open('resultados.csv', 'a', newline='') as f_object:
         dictwriter_object = DictWriter(f_object, fieldnames=headersCSV)
         dictwriter_object.writerow(dict)
