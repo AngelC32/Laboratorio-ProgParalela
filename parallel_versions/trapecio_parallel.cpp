@@ -53,15 +53,12 @@ int main() {
 
         n++;
     }
-
-
-
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
 
-	cout <<elapsed_seconds.count() <<endl;
-    cout <<"Valor de la integral: "<< gn <<endl;
-    cout <<"Número de particiones necesarias: " << n <<endl;
+	//cout <<elapsed_seconds.count() <<endl;
+    cout << gn <<endl;
+    cout << n <<endl;
 
 	return 0;
 }

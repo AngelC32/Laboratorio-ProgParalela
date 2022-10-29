@@ -74,7 +74,7 @@ int main() {
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
 
-	cout << elapsed_seconds.count() <<endl;
+	//cout << elapsed_seconds.count() <<endl;
     cout << gn <<endl;
     cout << n <<endl;
 
