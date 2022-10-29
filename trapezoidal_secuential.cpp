@@ -1,18 +1,20 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <bits/stdc++.h>
 #include <cmath>
+#include <vector>
 #include <ctype.h>
 #include <chrono>
 
 using namespace std;
 
-int getPriority(char c);
-bool isOperator(char c);
-string toPolacExp(string inf_exp);
+int getPriority(string operador);
+bool isOperator(string operador);
+vector <string> toPolacExp(vector <string> inf_exp);
 double operateBinomialExp(char op, double a, double b);
-double operatePolacExp(string exp, double var);
-double getIntegralByTrapezoidRule(double a, double b, int n, string f);
+double operatePolacExp(vector <string> exp, double var);
+double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f);
 
 /*
     Entradas:
@@ -28,18 +30,35 @@ double getIntegralByTrapezoidRule(double a, double b, int n, string f);
 */
 
 int main() {
-	string str_inf_exp, str_polac_exp;
+    string str_input="",concatenado="";
+	vector <string>str_inf_exp,str_polac_exp;
     double err, err_abs_adm;
     double gn, gn_plus_one;
-    double a, b;
-    int n=1;
+    int a, b, n=1;
 
     cin >> a >> b;
     cin >> err_abs_adm;
-    cin >> str_inf_exp;
-
+    cin >> str_input;
+    //convierte la cadena a un vector de cadenas
+    for(int i=0;i<str_input.size();i++){
+        concatenado=string(1,str_input[i]);
+        int prioridad1= getPriority(string(1,str_input[i]));
+        //verifica si el caracter evaluado y el que le continua en la cadena, son operadores matematicos o parentesis
+        if(isdigit(str_input[i])||str_input[i]=='.'||prioridad1==0){
+            //si la prioridad es 0 solo se toman en cuenta digitos numericos y el punto decimal
+            while(isdigit(str_input[i+1])||str_input[i+1]=='.'){
+                concatenado=concatenado+string(1,str_input[i+1]);
+                //itera al siguiente caracter de la cadena ingresada
+                i++;
+            }
+            //se agrega al vector los numeros concatenados
+            str_inf_exp.push_back(concatenado);
+        }else{
+            //se agrega al vector los operadores o parentesis ingresados
+            str_inf_exp.push_back(concatenado);
+        }
+    }
     str_polac_exp = toPolacExp(str_inf_exp);
-
     auto start = chrono::steady_clock::now();
     while(true) {
         gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
@@ -54,7 +73,7 @@ int main() {
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
 
-	//cout << elapsed_seconds.count() <<endl;
+	cout << elapsed_seconds.count() <<endl;
     cout << gn <<endl;
     cout << n <<endl;
 
@@ -63,20 +82,22 @@ int main() {
 
 /*
 	Formula usada:
-	
+
 	 b
 	S| f(x)dx  =~ (dx/2) * [f(x0) + 2f(x1) + ... + 2f(n-1) + f(xn)]
 	 a
 */
-double getIntegralByTrapezoidRule(double a, double b, int n, string f) {
+
+
+double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f) {
     double sum=0, dx, xi[n-1];
 
-    dx = (b - a)/n;
+    dx = ((b - a)*1.0)/n;
 
     // calculando los limites
     for (int i = 0; i < n-1; i++) {
         xi[i] = a + ((i+1)*dx);
-    } 
+    }
 
     for (int i = 0; i < n-1; i++) {
         sum += 2*operatePolacExp(f, xi[i]);
@@ -89,10 +110,11 @@ double getIntegralByTrapezoidRule(double a, double b, int n, string f) {
 }
 
 // Obtiene la prioridad de las operaciones a ejecutar
-int getPriority(char c) {
+int getPriority(string operador) {
+    char c;
+    c=operador[0];
 	switch (c) {
-		case '(':
-			return 0;
+		case '(': return -1;
 		case '+': case '-':
 			return 1;
 		case '*': case '/':
@@ -100,115 +122,82 @@ int getPriority(char c) {
 		case '^': case 'r': case 'l':
 			return 3;
 		default:
-			return 4;
+			return 0;
 	}
 	return 0;
 }
 
 // Es o no operador
-bool isOperator(char c) {
-	return c == '*' || c == '/' || c == '+' || c == '-' || 
+bool isOperator(string operador) {
+    char c;
+    c=operador[0];
+	return c == '*' || c == '/' || c == '+' || c == '-' ||
 			c == '^' || c == 'r' || c == 'l';
 }
 
 //Tansformación a expresion polaca
-string toPolacExp(string inf_exp) {
+vector <string> toPolacExp(vector <string> inf_exp) {
 
-    stack<char> stack_sign;
-    stack<string> stack_op;
+    stack<string> stack_sign;
+    vector<string> exp_convert;
 	string num;
 
-	char c;
-	string op1, op2;
-
-    for (int i=0; i < inf_exp.length(); i++) {
-		
+	string c;
+    reverse(inf_exp.begin(), inf_exp.end());
+    for (int i=0; i < inf_exp.size(); i++) {
 		c = inf_exp[i];
 
 		// Todos los '(' entran en la pila
-        if (c == '(') {
+        if (c == ")") {
             stack_sign.push(c);
         }
 
-        else if (c == ')') {
-            while (!stack_sign.empty() && stack_sign.top() != '(') {
+        else if (c == "(") {
+            while (!stack_sign.empty() && stack_sign.top() != ")") {
                 //para mantener el orden de los operandos
-			    op1 = stack_op.top();
-                stack_op.pop();
-                op2 = stack_op.top();
-                stack_op.pop();
-				
-                string op = string(1, stack_sign.top());
+			    exp_convert.push_back(stack_sign.top());
                 stack_sign.pop();
-
-				// lo añadimos a la pila de salida como un bloque
-                string tmp = op + " " + op2 + op1;
-                stack_op.push(tmp);
             }
 
             // Quita el '(' si hubiese uno
 			if(!stack_sign.empty()) {
 				stack_sign.pop();
 			}
-            
+
         }
 
         // Si no es operador lo agregamos al string de salida
         else if (!isOperator(c)) {
-            //Validar si existen numeros de mas de 1 cifra o variables
-			while ( isdigit(inf_exp[i]) || inf_exp[i] == '.' || 
-					(!isOperator(inf_exp[i]) && isalpha(inf_exp[i]))) {
-
-                num += string(1, inf_exp[i]);
-                i++;
-            }
-            stack_op.push(num + " ");
-            i--;        //devolviendo la posicion anterior al operador encontrado
-            num = "";
+            exp_convert.push_back(c);
         }
 
 		//Si es operador
         else {
 			// Ordenamos el operador entrante segun el orden de precedencia
-            while(!stack_sign.empty() && 
-				getPriority(c) < getPriority(stack_sign.top())) {
+            while(!stack_sign.empty() &&
+				getPriority(c) <=getPriority(stack_sign.top())) {
 
-                op1 = stack_op.top();
-                stack_op.pop();
-                op2 = stack_op.top();
-                stack_op.pop();
-				
-                string op = string(1, stack_sign.top());
+                exp_convert.push_back(stack_sign.top());
                 stack_sign.pop();
-
-                string tmp = op + " " + op2 + op1;
-                stack_op.push(tmp);
             }
 			// Pusheamos el operador guardado tras el ordenamiento
             stack_sign.push(c);
         }
     }
- 
+
     // Para validar signos faltantes
     while (!stack_sign.empty()) {
-        op1 = stack_op.top();
-        stack_op.pop();
-        op2 = stack_op.top();
-        stack_op.pop();
-
-        string op = string(1, stack_sign.top());
+        exp_convert.push_back(stack_sign.top());
         stack_sign.pop();
-
-        string tmp = op + " " + op2 + op1;
-        stack_op.push(tmp);
     }
- 
+    reverse(exp_convert.begin(), exp_convert.end());
 	//devuelve todo el bloque armado
-    return stack_op.top();
+    return exp_convert;
 }
 
 //Realiza una operación entre 2 numeros dados
-double operateBinomialExp(char op, double a, double b) {
+double operateBinomialExp(string operador, double a, double b) {
+    char op=operador[0];
     switch (op) {
         case '+': return a + b; break;
         case '-': return a - b; break;
@@ -222,17 +211,17 @@ double operateBinomialExp(char op, double a, double b) {
 }
 
 //Opera a partir de una expresion polaca dada y una variable (opcional)
-double operatePolacExp(string exp, double var) {
+double operatePolacExp(vector <string> exp, double var) {
     double op1, op2, res;
     stack<double> out_stack;
-	string num = "";
-    char c;
+    string c;
+    double num;
 
     //Evaluar
-    for (int i=exp.length()-1; i >= 0; i--) {
+    for (int i=exp.size()-1; i >= 0; i--) {
         c = exp[i];
 
-        if(isOperator(c)) {
+        if(getPriority(c)>0) {
             op1 = out_stack.top();
             out_stack.pop();
             op2 = out_stack.top();
@@ -241,16 +230,12 @@ double operatePolacExp(string exp, double var) {
             res = operateBinomialExp(c, op1, op2);
             out_stack.push(res);
 
-        } else if (isdigit(c)) {
+        } else if (isdigit(c[0])) {
 			//arma los numeros en caso de ser > a 1 cifra
-            while (exp[i] != ' ') {
-                num = string(1, exp[i]) + num;
-                i--;
-            }
-            out_stack.push(stod(num));       
-            num = "";
-			
-        } else if (!isOperator(c) && isalpha(c)) { //validar variable
+            num=atof(c.c_str());
+            out_stack.push(num);
+
+        } else if (isalpha(c[0])) { //validar variable
 			out_stack.push(var);
 		}
     }
