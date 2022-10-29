@@ -48,18 +48,18 @@ int main() {
         gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
 
         err = abs(gn - gn_plus_one);
-        
+
         if(err <= err_abs_adm) break;
 
         n++;
     }
-    
+
 
 
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
 
-	cout <<"Tiempo: "<< elapsed_seconds.count() <<endl;
+	cout <<elapsed_seconds.count() <<endl;
     cout <<"Valor de la integral: "<< gn <<endl;
     cout <<"Número de particiones necesarias: " << n <<endl;
 
@@ -68,7 +68,7 @@ int main() {
 
 /*
 	Formula usada:
-	
+
 	 b
 	S| f(x)dx  =~ (dx/2) * [f(x0) + 2f(x1) + ... + 2f(n-1) + f(xn)]
 	 a
@@ -78,20 +78,20 @@ double getIntegralByTrapezoidRule(double a, double b, int n, string f) {
 
     dx = ((b - a)*1.0)/n;
 
-#pragma omp parallel 
+#pragma omp parallel
  {
     // calculando los limites
     #pragma omp for nowait
     for (int i = 0; i < n-1; i++) {
         xi[i] = a + ((i+1)*dx);
-    } 
+    }
 
     #pragma omp for reduction(+:sum) nowait
     for (int i = 0; i < n-1; i++) {
         sum += 2*operatePolacExp(f, xi[i]);
     }
  }
-	
+
     sum += operatePolacExp(f, a) + operatePolacExp(f, b);
     sum *= dx/2;
 
@@ -117,7 +117,7 @@ int getPriority(char c) {
 
 // Es o no operador
 bool isOperator(char c) {
-	return c == '*' || c == '/' || c == '+' || c == '-' || 
+	return c == '*' || c == '/' || c == '+' || c == '-' ||
 			c == '^' || c == 'r' || c == 'l';
 }
 
@@ -132,7 +132,7 @@ string toPolacExp(string inf_exp) {
 	string op1, op2;
 
     for (int i=0; i < inf_exp.length(); i++) {
-		
+
 		c = inf_exp[i];
 
 		// Todos los '(' entran en la pila
@@ -147,7 +147,7 @@ string toPolacExp(string inf_exp) {
                 stack_op.pop();
                 op2 = stack_op.top();
                 stack_op.pop();
-				
+
                 string op = string(1, stack_sign.top());
                 stack_sign.pop();
 
@@ -160,13 +160,13 @@ string toPolacExp(string inf_exp) {
 			if(!stack_sign.empty()) {
 				stack_sign.pop();
 			}
-            
+
         }
 
         // Si no es operador lo agregamos al string de salida
         else if (!isOperator(c)) {
             //Validar si existen numeros de mas de 1 cifra
-            while ( isdigit(inf_exp[i]) || inf_exp[i] == '.' || 
+            while ( isdigit(inf_exp[i]) || inf_exp[i] == '.' ||
 					(!isOperator(inf_exp[i]) && isalpha(inf_exp[i]))) {
 
                 num += string(1, inf_exp[i]);
@@ -180,14 +180,14 @@ string toPolacExp(string inf_exp) {
 		//Si es operador
         else {
 			// Ordenamos el operador entrante segun el orden de precedencia
-            while(!stack_sign.empty() && 
+            while(!stack_sign.empty() &&
 				getPriority(c) < getPriority(stack_sign.top())) {
 
                 op1 = stack_op.top();
                 stack_op.pop();
                 op2 = stack_op.top();
                 stack_op.pop();
-				
+
                 string op = string(1, stack_sign.top());
                 stack_sign.pop();
 
@@ -198,7 +198,7 @@ string toPolacExp(string inf_exp) {
             stack_sign.push(c);
         }
     }
- 
+
     // Para validar signos faltantes
     while (!stack_sign.empty()) {
         op1 = stack_op.top();
@@ -212,7 +212,7 @@ string toPolacExp(string inf_exp) {
         string tmp = op + " " + op2 + op1;
         stack_op.push(tmp);
     }
- 
+
 	//devuelve todo el bloque armado
     return stack_op.top();
 }
@@ -257,7 +257,7 @@ double operatePolacExp(string exp, double var) {
                 num = string(1, exp[i]) + num;
                 i--;
             }
-            out_stack.push(stod(num));       
+            out_stack.push(stod(num));
             num = "";
 
         } else if (!isOperator(c) && isalpha(c)) { //validar variable

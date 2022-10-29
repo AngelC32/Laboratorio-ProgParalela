@@ -62,13 +62,14 @@ for i in range(15):
     lista_trapezoidal_parallel.append(tiempo)
 
 for i in range (15):
-        dict= {'Secuencial':lista_secuencial[0],'Secuencial_improved':lista_secuencial_improved[0],
-                'Paralela':lista_trapezoidal_parallel[0]
+        dict= {'Secuencial':lista_secuencial[i],'Secuencial_improved':lista_secuencial_improved[i],
+                'Paralela':lista_trapezoidal_parallel[i]
         }       
         with open('resultados.csv', 'a', newline='') as f_object:
                 dictwriter_object = DictWriter(f_object, fieldnames=headersCSV)
                 dictwriter_object.writerow(dict)
         f_object.close()
+
 '''
 #iteracion trapezoidal_parallel_improved
 lista_trapezoidal_parallel_improved=[]
