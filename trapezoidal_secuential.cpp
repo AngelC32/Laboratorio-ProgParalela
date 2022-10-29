@@ -43,7 +43,7 @@ int main() {
     while(true) {
         gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
         gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
-        err = gn - gn_plus_one;
+        err = abs(gn - gn_plus_one);
 
         if(err <= err_abs_adm) {
             break;
