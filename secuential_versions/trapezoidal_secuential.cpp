@@ -34,7 +34,8 @@ int main() {
 	vector <string>str_inf_exp,str_polac_exp;
     double err, err_abs_adm;
     double gn, gn_plus_one;
-    int a, b, n=1;
+    double a, b;
+    int n=1;
 
     cin >> a >> b;
     cin >> err_abs_adm;
@@ -63,7 +64,7 @@ int main() {
     while(true) {
         gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
         gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
-        err = abs(gn - gn_plus_one);
+        err = abs(gn-gn_plus_one);
 
         if(err <= err_abs_adm) {
             break;
