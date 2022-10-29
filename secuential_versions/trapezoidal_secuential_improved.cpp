@@ -55,7 +55,8 @@ int main() {
     chrono::duration<double> elapsed_seconds = end-start;
 
 	//cout << elapsed_seconds.count() <<endl;
-    cout << gn <<endl;
+    //cout << gn <<endl;
+	printf("%.15lf\n",gn);
     cout << n <<endl;
 
 	return 0;
