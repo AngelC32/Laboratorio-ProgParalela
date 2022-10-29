@@ -147,7 +147,7 @@ vector <string> toPolacExp(vector <string> inf_exp) {
     for (int i=0; i < inf_exp.size(); i++) {
 		c = inf_exp[i];
 
-		// Todos los '(' entran en la pila
+		// Todos los ')' entran en la pila
         if (c == ")") {
             stack_sign.push(c);
         }
