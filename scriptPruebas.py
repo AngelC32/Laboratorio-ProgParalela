@@ -27,23 +27,29 @@ with open('resultados.csv', 'w', newline='') as csvfile:
         writer.writeheader()
 
 csvfile.close()
-
+#iteracion trapezoidal_secuential
 for i in range(15):
     secuencial = subprocess.run(['./trapezoidal_secuential.exe'], 
                             capture_output=True, 
                             text=True, 
                             input=input.stdout)
 
+#iteracion trapezoidal_secuential_improved
+for i in range(15):
     secuencial_improved = subprocess.run(['./trapezoidal_secuential_improved.exe'], 
                             capture_output=True, 
                             text=True, 
                             input=input.stdout)
 
+#iteracion trapezoidal_parallel
+for i in range(15):
     paralela = subprocess.run(['./trapezoidal_parallel.exe'], 
                             capture_output=True, 
                             text=True, 
                             input=input.stdout)
 
+#iteracion trapezoidal_parallel_improved
+for i in range(15):
     paralela_improved = subprocess.run(['./trapezoidal_parallel_improved.exe'], 
                             capture_output=True, 
                             text=True, 
