@@ -12,7 +12,7 @@ bool isOperator(char c);
 string toPolacExp(string inf_exp);
 double operateBinomialExp(char op, double a, double b);
 double operatePolacExp(string exp, double var);
-double getIntegralByTrapezoidRule(int a, int b, int n, string f);
+double getIntegralByTrapezoidRule(double a, double b, int n, string f);
 
 /*
     Entradas:
@@ -31,7 +31,8 @@ int main() {
 	string str_inf_exp, str_polac_exp;
     double err, err_abs_adm;
     double gn, gn_plus_one;
-    int a, b, n=1;
+    double a, b;
+    int n=1;
 
     cin >> a >> b;
     cin >> err_abs_adm;
@@ -67,10 +68,10 @@ int main() {
 	S| f(x)dx  =~ (dx/2) * [f(x0) + 2f(x1) + ... + 2f(n-1) + f(xn)]
 	 a
 */
-double getIntegralByTrapezoidRule(int a, int b, int n, string f) {
+double getIntegralByTrapezoidRule(double a, double b, int n, string f) {
     double sum=0, dx, xi[n-1];
 
-    dx = ((b - a)*1.0)/n;
+    dx = (b - a)/n;
 
     // calculando los limites
     for (int i = 0; i < n-1; i++) {
