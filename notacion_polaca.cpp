@@ -14,7 +14,7 @@ bool isOperator(string operador);
 vector <string> toPolacExp(vector <string> inf_exp);
 double operateBinomialExp(char op, double a, double b);
 double operatePolacExp(vector <string> exp, double var);
-double getIntegralByTrapezoidRule(int a, int b, int n, vector <string> f);
+double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f);
 
 /*
     Entradas:
@@ -63,7 +63,7 @@ int main() {
     while(true) {
         gn = getIntegralByTrapezoidRule(a, b, n, str_polac_exp);
         gn_plus_one = getIntegralByTrapezoidRule(a, b, n+1, str_polac_exp);
-        err = gn - gn_plus_one;
+        err = abs(gn - gn_plus_one);
 
         if(err <= err_abs_adm) {
             break;
@@ -89,7 +89,7 @@ int main() {
 */
 
 
-double getIntegralByTrapezoidRule(int a, int b, int n, vector <string> f) {
+double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f) {
     double sum=0, dx, xi[n-1];
 
     dx = ((b - a)*1.0)/n;
