@@ -17,18 +17,17 @@ double operatePolacExp(vector <string> exp, double var);
 double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f);
 
 /*
-    Entradas:
-
-        a b         --> intervalo
-        err_abs_adm	--> error absoluto admisible
-        str_func    --> funcion a integrar
-
-    Salidas:
-
-        gn         --> valor de la integral
-        n           --> particiones necesarias (precision)
-*/
-
+ *   Entradas:
+ *
+ *      a b         --> intervalo
+ *      err_abs_adm	--> error absoluto admisible
+ *      str_func    --> funcion a integrar
+ *
+ *   Salidas:
+ *
+ *      gn         --> valor de la integral
+ *      n          --> particiones necesarias (precision)
+ */
 int main() {
     string str_input="",concatenado="";
 	vector <string>str_inf_exp,str_polac_exp;
@@ -83,14 +82,13 @@ int main() {
 }
 
 /*
-	Formula usada:
-
-	 b
-	S| f(x)dx  =~ (dx/2) * [f(x0) + 2f(x1) + ... + 2f(n-1) + f(xn)]
-	 a
-*/
-
-
+ * Obtiene la integral de una función dada en expresion prefija (polaca)
+ * dado cierto intervalo y cierto numero de particiones, mediante la formula: 
+ *
+ *	 b
+ *	S| f(x)dx  =~ (dx/2) * [f(x0) + 2f(x1) + ... + 2f(n-1) + f(xn)]
+ *	 a
+ */
 double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f) {
     double sum=0, dx, xi[n-1];
 
@@ -111,7 +109,9 @@ double getIntegralByTrapezoidRule(double a, double b, int n, vector <string> f) 
     return sum;
 }
 
-// Obtiene la prioridad de las operaciones a ejecutar
+/*
+ * Obtiene la prioridad del operador dado
+ */
 int getPriority(string operador) {
     char c;
     c=operador[0];
@@ -129,7 +129,9 @@ int getPriority(string operador) {
 	return 0;
 }
 
-// Es o no operador
+/*
+ * Devuelve si el caracter dado es o no un operador
+ */
 bool isOperator(string operador) {
     char c;
     c=operador[0];
@@ -137,7 +139,14 @@ bool isOperator(string operador) {
 			c == '^' || c == 'r' || c == 'l';
 }
 
-//Tansformación a expresion polaca
+/*
+ * Retorna una expresión infija dada a su expresión prefija (polaca)
+ * separada por espacios
+ *
+ *      Nota: La función admite decimales, variables (x, y o z) y valores 
+ *      mayores a 1 cifra, pero NO admite valores negativos o expresiones 
+ *      infijas con espacios.  
+ */
 vector <string> toPolacExp(vector <string> inf_exp) {
 
     stack<string> stack_sign;
@@ -197,7 +206,9 @@ vector <string> toPolacExp(vector <string> inf_exp) {
     return exp_convert;
 }
 
-//Realiza una operación entre 2 numeros dados
+/*
+ * Realiza la operación entre 2 números según el operador dado
+ */
 double operateBinomialExp(string operador, double a, double b) {
     char op=operador[0];
     switch (op) {
@@ -212,7 +223,10 @@ double operateBinomialExp(string operador, double a, double b) {
 	return 0;
 }
 
-//Opera a partir de una expresion polaca dada y una variable (opcional)
+/*
+ * Opera a partir de una expresión prefija(polaca) dada y una variable
+ * dada
+ */
 double operatePolacExp(vector <string> exp, double var) {
     double op1, op2, res;
     stack<double> out_stack;
